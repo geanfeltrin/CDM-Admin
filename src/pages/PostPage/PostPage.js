@@ -54,7 +54,12 @@ class Posts extends Component {
     selectedCategory: null,
     selectedSubCategory: "",
     selectedType: "",
-    uploadedFiles: []
+    uploadedFiles: [],
+    modalUpdate: false,
+    modalName: "",
+    modalDescription: "",
+    modalUrl: "",
+    modalType: ""
   };
 
   handleInputChange = e => {
@@ -218,6 +223,15 @@ class Posts extends Component {
       selectedType: null
     });
   };
+
+  // toggleUpdate = (name, id) => {
+  //   this.setState({
+  //     modalUpdate: !this.state.modalUpdate,
+  //     modalName: name,
+  //     modalEmail: email,
+  //     modalId: id
+  //   });
+  // };
   render() {
     const { post, openPostModal, closePostModal } = this.props;
     const {
@@ -391,6 +405,7 @@ class Posts extends Component {
                       <th className="text-center">Status</th>
                       <th className="text-center">Imagem</th>
                       <th className="text-center">Link Download</th>
+                      <th className="text-center">Editar</th>
                       <th className="text-center">Excluir Publicação</th>
                     </tr>
                   </MDBTableHead>
@@ -435,6 +450,23 @@ class Posts extends Component {
                               <MDBTooltip
                                 placement="left"
                                 tag="div"
+                                tooltipContent="Editar a Postagem"
+                              >
+                                <MDBBtn
+                                  size="sm"
+                                  color="info"
+                                  onClick={() =>
+                                    this.toggleUpdate(post.name, post.id)
+                                  }
+                                >
+                                  <MDBIcon icon="edit" className="mr-1" />
+                                </MDBBtn>
+                              </MDBTooltip>
+                            </td>
+                            <td>
+                              <MDBTooltip
+                                placement="left"
+                                tag="div"
                                 tooltipContent="Excluir a Postagem"
                               >
                                 <MDBBtn
@@ -456,6 +488,62 @@ class Posts extends Component {
             </MDBCard>
           </MDBCol>
         </MDBRow>
+        {/* INICIO  modal para Editar */}
+        {/* {modalUpdate && (
+          <Modal>
+            <MDBModal isOpen={modalUpdate} toggle={this.toggleUpdate}>
+              <MDBModalHeader toggle={this.toggleUpdate}>
+                Editar o Usuário "{modalName}"
+              </MDBModalHeader>
+              <form
+                className="needs-validation"
+                onSubmit={() => this.handleUpdate(modalId)}
+                noValidate
+              >
+                <MDBModalBody>
+                  <MDBInput
+                    label="Altere o username"
+                    type="text"
+                    name="modalName"
+                    value={modalName}
+                    onChange={this.handleInputChange}
+                    id="modalNameId"
+                    className="form-control"
+                    outline
+                    required
+                  />
+                  <div className="invalid-feedback">
+                    Você precisa informar um Username Válido!
+                  </div>
+                  <MDBInput
+                    label="Altere o Email"
+                    type="text"
+                    name="modalEmail"
+                    value={modalEmail}
+                    onChange={this.handleInputChange}
+                    id="modalEmailId"
+                    className="form-control"
+                    outline
+                    required
+                  />
+                  <div className="invalid-feedback">
+                    Você precisa informar um Email Válido!
+                  </div>
+                </MDBModalBody>
+
+                <MDBModalFooter>
+                  <MDBBtn onClick={this.toggleUpdate} color="secondary">
+                    Cancelar
+                  </MDBBtn>
+                  <MDBBtn color="primary" type="submit">
+                    Salvar
+                  </MDBBtn>
+                </MDBModalFooter>
+              </form>
+            </MDBModal>
+          </Modal>
+        )} */}
+        {/*FIM  modal para Editar */}
       </Container>
     );
   }

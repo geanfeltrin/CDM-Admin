@@ -371,6 +371,7 @@ class users extends Component {
           </Modal>
         )}
         {/*FIM  modal para deletar */}
+        {/*INICIO  modal para Editar */}
         {modalUpdate && (
           <Modal>
             <MDBModal isOpen={modalUpdate} toggle={this.toggleUpdate}>

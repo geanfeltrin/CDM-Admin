@@ -56,10 +56,12 @@ class Posts extends Component {
     selectedType: "",
     uploadedFiles: [],
     modalUpdate: false,
-    modalName: "",
+    modalTitle: "",
     modalDescription: "",
     modalUrl: "",
-    modalType: ""
+    modalType: "",
+    modalFile: [],
+    modalSubcategories: []
   };
 
   handleInputChange = e => {
@@ -224,14 +226,28 @@ class Posts extends Component {
     });
   };
 
-  // toggleUpdate = (name, id) => {
-  //   this.setState({
-  //     modalUpdate: !this.state.modalUpdate,
-  //     modalName: name,
-  //     modalEmail: email,
-  //     modalId: id
-  //   });
-  // };
+  handleUpdatePost = async id =>{
+    await api.put(`post/${id}`,{
+      title: this.state.modalTitle,
+      description: this.state.modalDescription,
+      url: this.state.modalUrl      
+    })
+  }
+
+  toggleUpdate = (title, id, description, url, file, subCategories, type) => {
+    
+    this.setState({
+      modalUpdate: !this.state.modalUpdate,
+      modalTitle: title,
+      modalId: id,
+      modalDescription: description,
+      modalUrl: url,
+      modalFile: file,
+      modalSubcategories: subCategories,
+      modalType: type   
+    });
+    
+  };
   render() {
     const { post, openPostModal, closePostModal } = this.props;
     const {
@@ -244,7 +260,15 @@ class Posts extends Component {
       selectedCategory,
       selectedType,
       selectedSubCategory,
-      uploadedFiles
+      uploadedFiles,
+      modalUpdate,
+      modalTitle,
+      modalId,
+      modalDescription,
+      modalUrl,
+      modalFile,
+      modalSubcategories,
+      modalType
     } = this.state;
 
     return (
@@ -456,7 +480,7 @@ class Posts extends Component {
                                   size="sm"
                                   color="info"
                                   onClick={() =>
-                                    this.toggleUpdate(post.name, post.id)
+                                    this.toggleUpdate(post.title, post.id, post.description, post.url, post.file, post.subCategories, post.type)
                                   }
                                 >
                                   <MDBIcon icon="edit" className="mr-1" />
@@ -489,46 +513,71 @@ class Posts extends Component {
           </MDBCol>
         </MDBRow>
         {/* INICIO  modal para Editar */}
-        {/* {modalUpdate && (
+        {modalUpdate && (
           <Modal>
             <MDBModal isOpen={modalUpdate} toggle={this.toggleUpdate}>
               <MDBModalHeader toggle={this.toggleUpdate}>
-                Editar o Usuário "{modalName}"
+                Editar a Postagem "{modalTitle}"
               </MDBModalHeader>
               <form
                 className="needs-validation"
-                onSubmit={() => this.handleUpdate(modalId)}
+                onSubmit={() => this.handleUpdatePost(modalId)}
                 noValidate
               >
                 <MDBModalBody>
                   <MDBInput
-                    label="Altere o username"
+                    label="Altere o Título"
                     type="text"
-                    name="modalName"
-                    value={modalName}
+                    name="modalTitle"
+                    value={modalTitle}
                     onChange={this.handleInputChange}
-                    id="modalNameId"
+                    id="modalTitleId"
                     className="form-control"
                     outline
                     required
                   />
                   <div className="invalid-feedback">
-                    Você precisa informar um Username Válido!
+                    Você precisa informar um Título Válido!
                   </div>
                   <MDBInput
-                    label="Altere o Email"
+                    label="Altere a Descrição"
                     type="text"
-                    name="modalEmail"
-                    value={modalEmail}
+                    name="modalDescription"
+                    value={modalDescription}
                     onChange={this.handleInputChange}
-                    id="modalEmailId"
+                    id="modalDescriptionId"
                     className="form-control"
                     outline
                     required
                   />
                   <div className="invalid-feedback">
-                    Você precisa informar um Email Válido!
+                    Você precisa informar uma Descrição Válido!
                   </div>
+                  <MDBInput
+                    label="Altere o link"
+                    type="text"
+                    name="modalUrl"
+                    value={modalUrl}
+                    onChange={this.handleInputChange}
+                    id="modalUrlId"
+                    className="form-control"
+                    outline
+                    required
+                  />
+                  <div className="invalid-feedback">
+                    Você precisa informar uma Descrição Válido!
+                  </div>
+                  {/* <Select
+                  options={PostType}                  
+                  getOptionLabel={PostType => PostType.name}
+                  getOptionValue={PostType => PostType.id}
+                  value={selectedType}
+                  onChange={this.handleChangeType}
+                  placeholder={"Status da publicação"}
+                  className={"mb-3"}
+                  isRequired
+                  required
+                /> */}
                 </MDBModalBody>
 
                 <MDBModalFooter>
@@ -542,7 +591,7 @@ class Posts extends Component {
               </form>
             </MDBModal>
           </Modal>
-        )} */}
+        )}
         {/*FIM  modal para Editar */}
       </Container>
     );

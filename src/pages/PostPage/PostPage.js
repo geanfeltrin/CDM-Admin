@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import { connect } from "react-redux";
@@ -402,7 +402,15 @@ class Posts extends Component {
                             <th>{post.id}</th>
                             <td>{post.title}</td>
                             <td>{post.subcategories.name}</td>
-                            <td>{post.type}</td>
+                            <td>
+                              <MDBBadge
+                                color={
+                                  post.type === "public" ? "success" : "danger"
+                                }
+                              >
+                                {post.type}
+                              </MDBBadge>
+                            </td>
                             <td>
                               {post.file_id === null ? (
                                 <img

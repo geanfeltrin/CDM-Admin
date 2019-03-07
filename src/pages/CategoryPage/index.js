@@ -15,7 +15,6 @@ import {
   MDBTableBody,
   MDBBadge,
   MDBIcon,
-  MDBContainer,
   MDBTooltip
 } from "mdbreact";
 

@@ -1,8 +1,8 @@
 {
-  "name": "mdb-react-admin-template",
+  "name": "CdmAdmin",
   "version": "1.0.0",
-  "description": "MDB - React Admin Dashboard Free",
-  "author": "MDBootstrap <support@mdbootstrap.com>",
+  "description": "CDM - central de markteting - admin",
+  "author": "CDM <gean.feltrin@residenciaeducacao.com.br>",
   "license": "MIT",
   "dependencies": {
     "google-map-react": "^1.0.6",

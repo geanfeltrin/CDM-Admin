@@ -8,7 +8,7 @@ import AuthActions from "../ducks/auth";
 export function* signIn({ email, password }) {
   try {
     const response = yield call(api.post, "sessions", { email, password });
-    console.log(response.data);
+    
     localStorage.setItem("@cdm-adm:token", response.data.token);
     yield put(AuthActions.signInSuccess(response.data.token));
 

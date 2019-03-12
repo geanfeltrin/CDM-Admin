@@ -10,11 +10,14 @@ import history from "./history";
 import Private from "./private";
 import Guest from "./guest";
 
+
+import DivStyled from "./DivStyled";
+
 const Routes = () => (
   <ConnectedRouter history={history}>
     <Switch>
       <Guest path="/admin" component={SignIn} />
-      <div className="flexible-content">
+      <DivStyled>
         {dashboard.map((route, index) => (
           <Private
             key={index}
@@ -33,7 +36,7 @@ const Routes = () => (
             />
           ))}
         </main>
-      </div>
+      </DivStyled>
     </Switch>
   </ConnectedRouter>
 );

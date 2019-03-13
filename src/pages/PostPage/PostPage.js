@@ -277,8 +277,7 @@ class Posts extends Component {
           <MDBBtn
             color="primary"
             onClick={() => {
-              openPostModal();
-              this.handleClear();
+              openPostModal();              
             }}
           >
             Cadastrar Nova Publicação
@@ -593,6 +592,34 @@ class Posts extends Component {
           </Modal>
         )}
         {/*FIM  modal para Editar */}
+        {/* INICIO modal para deletar */}
+        {modal && (
+          <Modal>
+            <MDBModal isOpen={modal} toggle={this.toggle}>
+              <MDBModalHeader toggle={this.toggle}>
+                Apagar a categoria "{modalName}"
+              </MDBModalHeader>
+              <MDBModalBody>
+                <span>
+                  Você deseja deletar a categoria <strong>"{modalName}"</strong>
+                  ?
+                </span>
+              </MDBModalBody>
+              <MDBModalFooter>
+                <MDBBtn onClick={this.toggle} color="secondary">
+                  Não
+                </MDBBtn>
+                <MDBBtn
+                  color="primary"
+                  onClick={() => this.handleDelete(modalId)}
+                >
+                  Sim
+                </MDBBtn>
+              </MDBModalFooter>
+            </MDBModal>
+          </Modal>
+        )}
+        {/*FIM  modal para deletar */}
       </Container>
     );
   }

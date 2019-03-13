@@ -5,7 +5,7 @@ import Immutable from "seamless-immutable";
 
 const { Types, Creators } = createActions({
   signInRequest: ["email", "password"],
-  signInSuccess: ["token"],
+  signInSuccess: ["token", "user"],
   signOut: null,
   getPermissionRequest: null,
   getPermissionSuccess: ["permission"]
@@ -19,16 +19,17 @@ export default Creators;
 export const INITIAL_STATE = Immutable({
   permission: localStorage.getItem("@cdm-adm:permission") || null,
   signedIn: !!localStorage.getItem("@cdm-adm:token"),
-  token: localStorage.getItem("@cdm-adm:token") || null
+  token: localStorage.getItem("@cdm-adm:token") || null,
+  user: localStorage.getItem("@cdm-adm:user") || null
 });
 
 /* Reducers */
 
-export const success = (state, { token }) => {
-  return state.merge({ signedIn: true, token });
+export const success = (state, { token, user }) => {
+  return state.merge({ signedIn: true, token , user });
 };
 export const logout = state =>
-  state.merge({ signOut: false, token: null, permission: null });
+  state.merge({ signOut: false, token: null, user: null });
 
 export const permissionSuccess = (state, { permission }) => {
   console.log(permission);

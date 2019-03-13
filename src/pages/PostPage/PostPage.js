@@ -92,7 +92,6 @@ class Posts extends Component {
     const url = postUrl;
     const sub_category_id = selectedSubCategory.id;
     const file_id = uploadedFilesId.id;
-
     const type_post = selectedType.name;
 
     console.log(title, description, url, sub_category_id, file_id, type_post);
@@ -203,28 +202,24 @@ class Posts extends Component {
     this.setState({ category: response.data });
   }
 
-  handleDeletePost = async id => {
-    await api.delete(`post/${id}`);
-    const { getPostRequest } = this.props;
-    getPostRequest();
-  };
-  handleClear = () => {
-    const [uploadedFilesId] = this.state.uploadedFiles;
-    if (this.state.uploadedFiles.length > 0) {
-      const Files = uploadedFilesId.id;
-      console.log(Files);
-      this.handleDeleteFile(Files);
-    }
-    this.setState({
-      postTitle: "",
-      postDescription: "",
-      postUrl: "",
-      selectedCategory: null,
-      selectedSubCategory: null,
-      uploadedFiles: [],
-      selectedType: null
-    });
-  };
+ 
+  // handleClear = () => {
+  //   const [uploadedFilesId] = this.state.uploadedFiles;
+  //   if (this.state.uploadedFiles.length > 0) {
+  //     const Files = uploadedFilesId.id;
+  //     console.log(Files);
+  //     this.handleDeleteFile(Files);
+  //   }
+  //   this.setState({
+  //     postTitle: "",
+  //     postDescription: "",
+  //     postUrl: "",
+  //     selectedCategory: null,
+  //     selectedSubCategory: null,
+  //     uploadedFiles: [],
+  //     selectedType: null
+  //   });
+  // };
 
   handleUpdatePost = async id =>{
     await api.put(`post/${id}`,{
@@ -276,10 +271,8 @@ class Posts extends Component {
         <Modal>
           <MDBBtn
             color="primary"
-            onClick={() => {
-              openPostModal();              
-            }}
-          >
+            onClick={openPostModal}   
+                    >
             Cadastrar Nova Publicação
           </MDBBtn>
 
@@ -287,10 +280,8 @@ class Posts extends Component {
             <MDBModalHeader toggle={closePostModal}>
               Cadastrar Nova Publicação
             </MDBModalHeader>
-            <form
-              className="needs-validation"
-              onSubmit={this.handleCreatePost}
-              noValidate
+            <form              
+              onSubmit={this.handleCreatePost}              
             >
               <MDBModalBody>
                 <MDBInput
@@ -388,10 +379,9 @@ class Posts extends Component {
               <MDBModalFooter>
                 <MDBBtn
                   color="secondary"
-                  onClick={() => {
-                    closePostModal();
-                    this.handleClear();
-                  }}
+                  onClick={() => 
+                    closePostModal                   
+                  }
                 >
                   Close
                 </MDBBtn>
@@ -593,9 +583,9 @@ class Posts extends Component {
         )}
         {/*FIM  modal para Editar */}
         {/* INICIO modal para deletar */}
-        {modal && (
+        {/* {modalDelete && (
           <Modal>
-            <MDBModal isOpen={modal} toggle={this.toggle}>
+            <MDBModal isOpen={modalDelete} toggle={this.toggle}>
               <MDBModalHeader toggle={this.toggle}>
                 Apagar a categoria "{modalName}"
               </MDBModalHeader>
@@ -618,7 +608,7 @@ class Posts extends Component {
               </MDBModalFooter>
             </MDBModal>
           </Modal>
-        )}
+        )} */}
         {/*FIM  modal para deletar */}
       </Container>
     );

@@ -61,7 +61,10 @@ class Posts extends Component {
     modalUrl: "",
     modalType: "",
     modalFile: [],
-    modalSubcategories: []
+    modalSubcategories: [],
+    modalDelete: false,
+    modalName: ""     
+    
   };
 
   handleInputChange = e => {
@@ -200,6 +203,9 @@ class Posts extends Component {
     await api.delete(`post/${id}`);
     const { getPostRequest } = this.props;
     getPostRequest();
+    this.setState({
+      modalDelete: !this.state. modalDelete
+    })
   };
 
   async componentDidMount() {
@@ -238,8 +244,7 @@ class Posts extends Component {
     })
   }
 
-  toggleUpdate = (title, id, description, url, file, subCategories, type) => {
-    
+  toggleUpdate = (title, id, description, url, file, subCategories, type) => {    
     this.setState({
       modalUpdate: !this.state.modalUpdate,
       modalTitle: title,
@@ -249,9 +254,16 @@ class Posts extends Component {
       modalFile: file,
       modalSubcategories: subCategories,
       modalType: type   
-    });
+    });  
     
   };
+  toggleDelete = (name, id) => {
+    this.setState({
+      modalDelete: !this.state. modalDelete,
+      modalId: id,
+      modalName: name
+    })
+  }
   render() {
     const { post, openPostModal, closePostModal } = this.props;
     const {
@@ -272,7 +284,9 @@ class Posts extends Component {
       modalUrl,
       modalFile,
       modalSubcategories,
-      modalType
+      modalType,
+      modalDelete,
+      modalName
     } = this.state;
 
     return (
@@ -493,7 +507,7 @@ class Posts extends Component {
                                 <MDBBtn
                                   size="sm"
                                   color="danger"
-                                  onClick={() => this.handleDeletePost(post.id)}
+                                  onClick={() => this.toggleDelete(post.title, post.id)}
                                 >
                                   <MDBIcon icon="trash-alt" className="mr-1" />
                                 </MDBBtn>
@@ -591,32 +605,32 @@ class Posts extends Component {
         )}
         {/*FIM  modal para Editar */}
         {/* INICIO modal para deletar */}
-        {/* {modalDelete && (
+        {modalDelete && (
           <Modal>
-            <MDBModal isOpen={modalDelete} toggle={this.toggle}>
-              <MDBModalHeader toggle={this.toggle}>
+            <MDBModal isOpen={modalDelete} toggle={this.toggleDelete}>
+              <MDBModalHeader toggle={this.toggleDelete}>
                 Apagar a categoria "{modalName}"
               </MDBModalHeader>
               <MDBModalBody>
                 <span>
-                  Você deseja deletar a categoria <strong>"{modalName}"</strong>
+                  Você deseja deletar a publicação <strong>"{modalName}"</strong>
                   ?
                 </span>
               </MDBModalBody>
               <MDBModalFooter>
-                <MDBBtn onClick={this.toggle} color="secondary">
+                <MDBBtn onClick={this.toggleDelete} color="secondary">
                   Não
                 </MDBBtn>
                 <MDBBtn
                   color="primary"
-                  onClick={() => this.handleDelete(modalId)}
+                  onClick={() => this.handleDeletePost(modalId)}
                 >
                   Sim
                 </MDBBtn>
               </MDBModalFooter>
             </MDBModal>
           </Modal>
-        )} */}
+        )}
         {/*FIM  modal para deletar */}
       </Container>
     );

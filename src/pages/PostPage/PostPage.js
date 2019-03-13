@@ -103,6 +103,15 @@ class Posts extends Component {
       sub_category_id,
       type_post
     );
+    this.setState({
+      postTitle: "",
+      postDescription: "",
+      postUrl: "",
+      selectedCategory: null,
+      selectedSubCategory: null,
+      uploadedFiles: [],
+      selectedType: null
+    })
   };
 
   handleChangeCategory = selectedCategory => {
@@ -203,23 +212,23 @@ class Posts extends Component {
   }
 
  
-  // handleClear = () => {
-  //   const [uploadedFilesId] = this.state.uploadedFiles;
-  //   if (this.state.uploadedFiles.length > 0) {
-  //     const Files = uploadedFilesId.id;
-  //     console.log(Files);
-  //     this.handleDeleteFile(Files);
-  //   }
-  //   this.setState({
-  //     postTitle: "",
-  //     postDescription: "",
-  //     postUrl: "",
-  //     selectedCategory: null,
-  //     selectedSubCategory: null,
-  //     uploadedFiles: [],
-  //     selectedType: null
-  //   });
-  // };
+  handleClear = () => {
+    const [uploadedFilesId] = this.state.uploadedFiles;
+    if (this.state.uploadedFiles.length > 0) {
+      const Files = uploadedFilesId.id;
+      console.log(Files);
+      this.handleDeleteFile(Files);
+    }
+    this.setState({
+      postTitle: "",
+      postDescription: "",
+      postUrl: "",
+      selectedCategory: null,
+      selectedSubCategory: null,
+      uploadedFiles: [],
+      selectedType: null
+    });
+  };
 
   handleUpdatePost = async id =>{
     await api.put(`post/${id}`,{
@@ -379,9 +388,8 @@ class Posts extends Component {
               <MDBModalFooter>
                 <MDBBtn
                   color="secondary"
-                  onClick={() => 
-                    closePostModal                   
-                  }
+                  onClick={closePostModal}  
+             
                 >
                   Close
                 </MDBBtn>

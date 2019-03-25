@@ -251,7 +251,7 @@ class users extends Component {
         <MDBRow>
           <MDBCol md="12">
             <MDBCard className="mt-5">
-              <MDBCardBody>
+              <MDBCardBody className="table-responsive">
                 <MDBTable>
                   <MDBTableHead color="primary-color" textWhite>
                     <tr>

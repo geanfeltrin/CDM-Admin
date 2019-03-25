@@ -63,8 +63,7 @@ class Posts extends Component {
     modalFile: [],
     modalSubcategories: [],
     modalDelete: false,
-    modalName: ""     
-    
+    modalName: ""
   };
 
   handleInputChange = e => {
@@ -114,7 +113,7 @@ class Posts extends Component {
       selectedSubCategory: null,
       uploadedFiles: [],
       selectedType: null
-    })
+    });
   };
 
   handleChangeCategory = selectedCategory => {
@@ -204,8 +203,8 @@ class Posts extends Component {
     const { getPostRequest } = this.props;
     getPostRequest();
     this.setState({
-      modalDelete: !this.state. modalDelete
-    })
+      modalDelete: !this.state.modalDelete
+    });
   };
 
   async componentDidMount() {
@@ -217,7 +216,6 @@ class Posts extends Component {
     this.setState({ category: response.data });
   }
 
- 
   handleClear = () => {
     const [uploadedFilesId] = this.state.uploadedFiles;
     if (this.state.uploadedFiles.length > 0) {
@@ -236,15 +234,15 @@ class Posts extends Component {
     });
   };
 
-  handleUpdatePost = async id =>{
-    await api.put(`post/${id}`,{
+  handleUpdatePost = async id => {
+    await api.put(`post/${id}`, {
       title: this.state.modalTitle,
       description: this.state.modalDescription,
-      url: this.state.modalUrl      
-    })
-  }
+      url: this.state.modalUrl
+    });
+  };
 
-  toggleUpdate = (title, id, description, url, file, subCategories, type) => {    
+  toggleUpdate = (title, id, description, url, file, subCategories, type) => {
     this.setState({
       modalUpdate: !this.state.modalUpdate,
       modalTitle: title,
@@ -253,17 +251,16 @@ class Posts extends Component {
       modalUrl: url,
       modalFile: file,
       modalSubcategories: subCategories,
-      modalType: type   
-    });  
-    
+      modalType: type
+    });
   };
   toggleDelete = (name, id) => {
     this.setState({
-      modalDelete: !this.state. modalDelete,
+      modalDelete: !this.state.modalDelete,
       modalId: id,
       modalName: name
-    })
-  }
+    });
+  };
   render() {
     const { post, openPostModal, closePostModal } = this.props;
     const {
@@ -292,10 +289,7 @@ class Posts extends Component {
     return (
       <Container>
         <Modal>
-          <MDBBtn
-            color="primary"
-            onClick={openPostModal}   
-                    >
+          <MDBBtn color="primary" onClick={openPostModal}>
             Cadastrar Nova Publicação
           </MDBBtn>
 
@@ -303,9 +297,7 @@ class Posts extends Component {
             <MDBModalHeader toggle={closePostModal}>
               Cadastrar Nova Publicação
             </MDBModalHeader>
-            <form              
-              onSubmit={this.handleCreatePost}              
-            >
+            <form onSubmit={this.handleCreatePost}>
               <MDBModalBody>
                 <MDBInput
                   label="Digite o titulo da postagem"
@@ -400,11 +392,7 @@ class Posts extends Component {
                 </MDBCol>
               </MDBModalBody>
               <MDBModalFooter>
-                <MDBBtn
-                  color="secondary"
-                  onClick={closePostModal}  
-             
-                >
+                <MDBBtn color="secondary" onClick={closePostModal}>
                   Close
                 </MDBBtn>
 
@@ -430,7 +418,7 @@ class Posts extends Component {
         <MDBRow>
           <MDBCol md="12">
             <MDBCard className="mt-5">
-              <MDBCardBody>
+              <MDBCardBody className="table-responsive">
                 <MDBTable>
                   <MDBTableHead color="primary-color" textWhite>
                     <tr>
@@ -491,7 +479,15 @@ class Posts extends Component {
                                   size="sm"
                                   color="info"
                                   onClick={() =>
-                                    this.toggleUpdate(post.title, post.id, post.description, post.url, post.file, post.subCategories, post.type)
+                                    this.toggleUpdate(
+                                      post.title,
+                                      post.id,
+                                      post.description,
+                                      post.url,
+                                      post.file,
+                                      post.subCategories,
+                                      post.type
+                                    )
                                   }
                                 >
                                   <MDBIcon icon="edit" className="mr-1" />
@@ -507,7 +503,9 @@ class Posts extends Component {
                                 <MDBBtn
                                   size="sm"
                                   color="danger"
-                                  onClick={() => this.toggleDelete(post.title, post.id)}
+                                  onClick={() =>
+                                    this.toggleDelete(post.title, post.id)
+                                  }
                                 >
                                   <MDBIcon icon="trash-alt" className="mr-1" />
                                 </MDBBtn>
@@ -613,8 +611,8 @@ class Posts extends Component {
               </MDBModalHeader>
               <MDBModalBody>
                 <span>
-                  Você deseja deletar a publicação <strong>"{modalName}"</strong>
-                  ?
+                  Você deseja deletar a publicação{" "}
+                  <strong>"{modalName}"</strong>?
                 </span>
               </MDBModalBody>
               <MDBModalFooter>

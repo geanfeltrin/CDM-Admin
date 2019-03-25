@@ -118,6 +118,7 @@ class CategoryPage extends Component {
     return (
       <Fragment>
         <MDBRow>
+          {/*  Inicio Modal Cadastrar Categoria  */}
           <MDBCol size="4">
             <Modal>
               <MDBBtn color="primary" onClick={openCategoryModal}>
@@ -163,14 +164,17 @@ class CategoryPage extends Component {
               </MDBModal>
             </Modal>
           </MDBCol>
+          {/*  Fim Modal Cadastrar Categoria  */}
+          {/*  Inicio Modal Cadastrar Categoria  */}
           <MDBCol size="4">
             <SubCategory />
           </MDBCol>
+          {/*  Inicio Modal Cadastrar Categoria  */}
         </MDBRow>
         <MDBRow>
-          <MDBCol md="12">
+          <MDBCol>
             <MDBCard className="mt-5">
-              <MDBCardBody>
+              <MDBCardBody className="table-responsive">
                 <MDBTable>
                   <MDBTableHead color="primary-color" textWhite>
                     <tr className="text-center">

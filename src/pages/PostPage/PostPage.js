@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import { NavLink } from "react-router-dom";
 
 import PostActions from "../../store/ducks/post";
 
@@ -37,6 +38,7 @@ import {
 } from "mdbreact";
 
 import Modal from "../../components/Modal";
+import { updateFeatured } from "../../store/sagas/post";
 
 class Posts extends Component {
   static propTypes = {
@@ -63,7 +65,8 @@ class Posts extends Component {
     modalFile: [],
     modalSubcategories: [],
     modalDelete: false,
-    modalName: ""
+    modalName: "",
+    featured: false
   };
 
   handleInputChange = e => {
@@ -242,6 +245,12 @@ class Posts extends Component {
     });
   };
 
+  handleUpdatePostDestaque = async (id, featured) => {
+    console.log(id, featured);
+    const { updateFeaturedRequest } = this.props;
+    updateFeaturedRequest(id, featured);
+  };
+
   toggleUpdate = (title, id, description, url, file, subCategories, type) => {
     this.setState({
       modalUpdate: !this.state.modalUpdate,
@@ -283,7 +292,8 @@ class Posts extends Component {
       modalSubcategories,
       modalType,
       modalDelete,
-      modalName
+      modalName,
+      featured
     } = this.state;
 
     return (
@@ -428,6 +438,7 @@ class Posts extends Component {
                       <th className="text-center">Status</th>
                       <th className="text-center">Imagem</th>
                       <th className="text-center">Link Download</th>
+                      <th className="text-center">Destaque</th>
                       <th className="text-center">Editar</th>
                       <th className="text-center">Excluir Publicação</th>
                     </tr>
@@ -466,8 +477,38 @@ class Posts extends Component {
                             </td>
                             <td>
                               <a href={post.url} alt={post.title}>
-                                <MDBIcon icon="link" className="mr-1" />
+                                <MDBIcon icon="link" className="mr-1 outline" />
                               </a>
+                            </td>
+                            <td>
+                              <MDBTooltip
+                                placement="left"
+                                tag="div"
+                                tooltipContent="Clique Para torna-lo Destaque na tela principal"
+                              >
+                                <MDBBtn
+                                  size="sm"
+                                  color="transparent"
+                                  className="btn-update"
+                                  onClick={() =>
+                                    this.handleUpdatePostDestaque(
+                                      post.id,
+                                      !post.featured
+                                    )
+                                  }
+                                  href="/post"
+                                >
+                                  <MDBIcon
+                                    icon="star"
+                                    className={
+                                      post.featured
+                                        ? "amber-text"
+                                        : "indigo-text"
+                                    }
+                                    size="lg"
+                                  />
+                                </MDBBtn>
+                              </MDBTooltip>
                             </td>
                             <td>
                               <MDBTooltip

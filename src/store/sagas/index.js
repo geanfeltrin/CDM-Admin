@@ -9,7 +9,7 @@ import { CategoryTypes } from "../ducks/category";
 import { getSubCategory, createSubCategory } from "./subCategory";
 import { SubCategoryTypes } from "../ducks/subCategory";
 
-import { getPost, createPost } from "./post";
+import { getPost, createPost, updateFeatured } from "./post";
 import { PostTypes } from "../ducks/post";
 
 import { getUsers, createUsers } from "./users";
@@ -33,6 +33,7 @@ export default function* rootSaga() {
 
     takeLatest(PostTypes.GET_POST_REQUEST, getPost),
     takeLatest(PostTypes.CREATE_POST_REQUEST, createPost),
+    takeLatest(PostTypes.UPDATE_FEATURED_REQUEST, updateFeatured),
 
     takeLatest(UsersTypes.GET_USERS_REQUEST, getUsers),
     takeLatest(UsersTypes.CREATE_USERS_REQUEST, createUsers)

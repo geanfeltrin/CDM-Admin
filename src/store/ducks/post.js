@@ -16,7 +16,9 @@ const { Types, Creators } = createActions({
     "sub_category_id",
     "type_post"
   ],
-  createPostSuccess: ["post"]
+  createPostSuccess: ["post"],
+  updateFeaturedRequest: ["id", "featured"],
+  updateFeaturedSuccess: ["data"]
 });
 
 export const PostTypes = Types;
@@ -40,11 +42,14 @@ export const closeModal = state => state.merge({ PostModalOpen: false });
 export const createSuccess = (state, { post }) =>
   state.merge({ data: [...state.data, post] });
 
+export const featuredSuccess = (state, { post }) =>
+  state.merge({ data: [...state.data, post] });
 /* Reducers to types */
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.GET_POST_SUCCESS]: success,
   [Types.CREATE_POST_SUCCESS]: createSuccess,
   [Types.OPEN_POST_MODAL]: openModal,
-  [Types.CLOSE_POST_MODAL]: closeModal
+  [Types.CLOSE_POST_MODAL]: closeModal,
+  [Types.UPDATE_FEATURED_SUCCESS]: featuredSuccess
 });

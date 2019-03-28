@@ -5,10 +5,12 @@ import { actions as toastrActions } from "react-redux-toastr";
 
 import PostAction from "../ducks/post";
 
-export function* getPost() {
-  const response = yield call(api.get, "post");
+export function* getPost({ page }) {
+  const response = yield call(api.get, `post?page=${page}`);
 
-  yield put(PostAction.getPostSuccess(response.data));
+  yield put(PostAction.getPostSuccess([response.data]));
+  const teste = [response.data];
+  console.log(teste);
 }
 
 export function* createPost({

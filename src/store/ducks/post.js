@@ -4,7 +4,7 @@ import Immutable from "seamless-immutable";
 /* Types & Action Creators */
 
 const { Types, Creators } = createActions({
-  getPostRequest: null,
+  getPostRequest: ["page"],
   getPostSuccess: ["data"],
   openPostModal: null,
   closePostModal: null,

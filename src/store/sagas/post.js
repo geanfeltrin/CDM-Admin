@@ -8,9 +8,7 @@ import PostAction from "../ducks/post";
 export function* getPost({ page }) {
   const response = yield call(api.get, `post?page=${page}`);
 
-  yield put(PostAction.getPostSuccess([response.data]));
-  const teste = [response.data];
-  console.log(teste);
+  yield put(PostAction.getPostSuccess(response.data));
 }
 
 export function* createPost({

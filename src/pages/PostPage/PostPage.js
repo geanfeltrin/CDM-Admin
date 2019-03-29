@@ -3,7 +3,8 @@ import PropTypes from "prop-types";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { NavLink } from "react-router-dom";
+
+import Paginate from "../../components/Paginate";
 
 import PostActions from "../../store/ducks/post";
 
@@ -38,7 +39,6 @@ import {
 } from "mdbreact";
 
 import Modal from "../../components/Modal";
-import { updateFeatured } from "../../store/sagas/post";
 
 class Posts extends Component {
   static propTypes = {
@@ -71,7 +71,7 @@ class Posts extends Component {
 
   async componentDidMount() {
     const { getPostRequest } = this.props;
-    const page = 2;
+    const page = 1;
 
     getPostRequest(page);
 
@@ -109,7 +109,6 @@ class Posts extends Component {
     const file_id = uploadedFilesId.id;
     const type_post = selectedType.name;
 
-    console.log(title, description, url, sub_category_id, file_id, type_post);
     createPostRequest(
       title,
       description,
@@ -271,6 +270,30 @@ class Posts extends Component {
       modalName: name
     });
   };
+
+  handleNextPage = () => {
+    const { post, getPostRequest } = this.props;
+    const page = post.data.page;
+    const lastPage = post.data.lastPage;
+
+    const pageNumber = page + 1;
+    if (pageNumber > lastPage) return;
+    getPostRequest(pageNumber);
+  };
+
+  handlePrevPage = () => {
+    const { post, getPostRequest } = this.props;
+    const { lastPage, page } = post.data;
+    if (pageNumber === 1) return;
+    const pageNumber = page - 1;
+
+    getPostRequest(pageNumber);
+  };
+  handleClickNumber = page => {
+    const { getPostRequest } = this.props;
+    getPostRequest(page);
+  };
+
   render() {
     const { post, openPostModal, closePostModal } = this.props;
     const {
@@ -444,125 +467,147 @@ class Posts extends Component {
                       <th className="text-center">Excluir Publicação</th>
                     </tr>
                   </MDBTableHead>
-                  {post.data.data && post.data.data.map(post => {
-                    if (post) {
-                      return (
-                        <MDBTableBody key={post.id}>
-                          <tr className="text-center">
-                            <th>{post.id}</th>
-                            <td>{post.title}</td>
-                            <td>{post.subcategories.name}</td>
-                            <td>
-                              <MDBBadge
-                                color={
-                                  post.type === "public" ? "success" : "danger"
-                                }
-                              >
-                                {post.type}
-                              </MDBBadge>
-                            </td>
-                            <td>
-                              {post.file_id === null ? (
-                                <img
-                                  src={imgDefault}
-                                  alt="thumbnail"
-                                  className="img-thumbnail mx-auto d-block"
-                                />
-                              ) : (
-                                <img
-                                  src={post.file.url}
-                                  alt="thumbnail"
-                                  className="img-thumbnail mx-auto d-block"
-                                />
-                              )}
-                            </td>
-                            <td>
-                              <a href={post.url} alt={post.title}>
-                                <MDBIcon icon="link" className="mr-1 outline" />
-                              </a>
-                            </td>
-                            <td>
-                              <MDBTooltip
-                                placement="left"
-                                tag="div"
-                                tooltipContent="Clique Para torna-lo Destaque na tela principal"
-                              >
-                                <MDBBtn
-                                  size="sm"
-                                  color="transparent"
-                                  className="btn-update"
-                                  onClick={() =>
-                                    this.handleUpdatePostDestaque(
-                                      post.id,
-                                      !post.featured
-                                    )
+                  {post.data.data &&
+                    post.data.data.map(post => {
+                      if (post) {
+                        return (
+                          <MDBTableBody key={post.id}>
+                            <tr className="text-center">
+                              <th>{post.id}</th>
+                              <td>{post.title}</td>
+                              <td>{post.subcategories.name}</td>
+                              <td>
+                                <MDBBadge
+                                  color={
+                                    post.type === "public"
+                                      ? "success"
+                                      : "danger"
                                   }
-                                  href="/post"
                                 >
-                                  <MDBIcon
-                                    icon="star"
-                                    className={
-                                      post.featured
-                                        ? "amber-text"
-                                        : "indigo-text"
-                                    }
-                                    size="lg"
+                                  {post.type}
+                                </MDBBadge>
+                              </td>
+                              <td>
+                                {post.file_id === null ? (
+                                  <img
+                                    src={imgDefault}
+                                    alt="thumbnail"
+                                    className="img-thumbnail mx-auto d-block"
                                   />
-                                </MDBBtn>
-                              </MDBTooltip>
-                            </td>
-                            <td>
-                              <MDBTooltip
-                                placement="left"
-                                tag="div"
-                                tooltipContent="Editar a Postagem"
-                              >
-                                <MDBBtn
-                                  size="sm"
-                                  color="info"
-                                  onClick={() =>
-                                    this.toggleUpdate(
-                                      post.title,
-                                      post.id,
-                                      post.description,
-                                      post.url,
-                                      post.file,
-                                      post.subCategories,
-                                      post.type
-                                    )
-                                  }
+                                ) : (
+                                  <img
+                                    src={post.file.url}
+                                    alt="thumbnail"
+                                    className="img-thumbnail mx-auto d-block"
+                                  />
+                                )}
+                              </td>
+                              <td>
+                                <a href={post.url} alt={post.title}>
+                                  <MDBIcon
+                                    icon="link"
+                                    className="mr-1 outline"
+                                  />
+                                </a>
+                              </td>
+                              <td>
+                                <MDBTooltip
+                                  placement="left"
+                                  tag="div"
+                                  tooltipContent="Clique Para torna-lo Destaque na tela principal"
                                 >
-                                  <MDBIcon icon="edit" className="mr-1" />
-                                </MDBBtn>
-                              </MDBTooltip>
-                            </td>
-                            <td>
-                              <MDBTooltip
-                                placement="left"
-                                tag="div"
-                                tooltipContent="Excluir a Postagem"
-                              >
-                                <MDBBtn
-                                  size="sm"
-                                  color="danger"
-                                  onClick={() =>
-                                    this.toggleDelete(post.title, post.id)
-                                  }
+                                  <MDBBtn
+                                    size="sm"
+                                    color="transparent"
+                                    className="btn-update"
+                                    onClick={() =>
+                                      this.handleUpdatePostDestaque(
+                                        post.id,
+                                        !post.featured
+                                      )
+                                    }
+                                    href="/post"
+                                  >
+                                    <MDBIcon
+                                      icon="star"
+                                      className={
+                                        post.featured
+                                          ? "amber-text"
+                                          : "indigo-text"
+                                      }
+                                      size="lg"
+                                    />
+                                  </MDBBtn>
+                                </MDBTooltip>
+                              </td>
+                              <td>
+                                <MDBTooltip
+                                  placement="left"
+                                  tag="div"
+                                  tooltipContent="Editar a Postagem"
                                 >
-                                  <MDBIcon icon="trash-alt" className="mr-1" />
-                                </MDBBtn>
-                              </MDBTooltip>
-                            </td>
-                          </tr>
-                        </MDBTableBody>
-                      );
-                    } else return null;
-                  })}
+                                  <MDBBtn
+                                    size="sm"
+                                    color="info"
+                                    onClick={() =>
+                                      this.toggleUpdate(
+                                        post.title,
+                                        post.id,
+                                        post.description,
+                                        post.url,
+                                        post.file,
+                                        post.subCategories,
+                                        post.type
+                                      )
+                                    }
+                                  >
+                                    <MDBIcon icon="edit" className="mr-1" />
+                                  </MDBBtn>
+                                </MDBTooltip>
+                              </td>
+                              <td>
+                                <MDBTooltip
+                                  placement="left"
+                                  tag="div"
+                                  tooltipContent="Excluir a Postagem"
+                                >
+                                  <MDBBtn
+                                    size="sm"
+                                    color="danger"
+                                    onClick={() =>
+                                      this.toggleDelete(post.title, post.id)
+                                    }
+                                  >
+                                    <MDBIcon
+                                      icon="trash-alt"
+                                      className="mr-1"
+                                    />
+                                  </MDBBtn>
+                                </MDBTooltip>
+                              </td>
+                            </tr>
+                          </MDBTableBody>
+                        );
+                      } else return null;
+                    })}
                 </MDBTable>
+                <Paginate
+                  className="text-center"
+                  clickNumber={this.handleClickNumber}
+                  total={post.data.lastPage}
+                  disabledPrev={post.data.page === 1 ? true : false}
+                  disabledNext={
+                    post.data.page == post.data.lastPage ? true : false
+                  }
+                  active={post.data.page}
+                  nextPage={() => this.handleNextPage()}
+                  prevPage={() => this.handlePrevPage()}
+                />
               </MDBCardBody>
             </MDBCard>
           </MDBCol>
         </MDBRow>
+
         {/* INICIO  modal para Editar */}
         {modalUpdate && (
           <Modal>
@@ -673,7 +718,6 @@ class Posts extends Component {
         )}
         {/*FIM  modal para deletar */}
       </Container>
-      
     );
   }
 }

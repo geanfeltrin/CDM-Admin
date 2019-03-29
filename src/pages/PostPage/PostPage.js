@@ -4,8 +4,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
-import Paginate from "../../components/Paginate";
-
 import PostActions from "../../store/ducks/post";
 
 import api from "../../services/api";
@@ -13,10 +11,12 @@ import Select from "react-select";
 import { uniqueId } from "lodash";
 import filesize from "filesize";
 
+// components
 import ImgDropAndCrop from "../../components/ImgDropCrop";
 import FileList from "../../components/FileList";
-
 import imgDefault from "../../assets/default.jpeg";
+import Paginate from "../../components/Paginate";
+// fim components
 
 import { Container } from "./styles";
 import {

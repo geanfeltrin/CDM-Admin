@@ -246,7 +246,6 @@ class Posts extends Component {
   };
 
   handleUpdatePostDestaque = async (id, featured) => {
-    console.log(id, featured);
     const { updateFeaturedRequest } = this.props;
     updateFeaturedRequest(id, featured);
   };

@@ -17,7 +17,8 @@ export function* createPost({
   url,
   sub_category_id,
   file_id,
-  type_post
+  type_post,
+  featured
 }) {
   try {
     const response = yield call(api.post, "post", {
@@ -26,10 +27,14 @@ export function* createPost({
       url,
       sub_category_id,
       file_id,
-      type: type_post
+      type: type_post,
+      featured
     });
-
+    console.log(response);
+    console.log("s", response.data);
+    console.log(PostAction.createPostSuccess(response.data));
     yield put(PostAction.createPostSuccess(response.data));
+
     yield put(PostAction.closePostModal());
 
     yield put(
@@ -40,6 +45,7 @@ export function* createPost({
       })
     );
   } catch (error) {
+    console.log(error);
     yield put(
       toastrActions.add({
         type: "error",

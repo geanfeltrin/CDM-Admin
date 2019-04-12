@@ -85,7 +85,7 @@ class Posts extends Component {
 
   handleCreatePost = e => {
     e.preventDefault();
-    e.target.className += " was-validated";
+    // e.target.className += " was-validated";
 
     const { createPostRequest } = this.props;
     const {
@@ -108,15 +108,20 @@ class Posts extends Component {
     const sub_category_id = selectedSubCategory.id;
     const file_id = uploadedFilesId.id;
     const type_post = selectedType.name;
-
+    const featured = false;
+    console.log(
+      `title:${title},description:${description},url:${url}, sub_category_id: ${sub_category_id},file_id: ${file_id},type_post:${type_post} `
+    );
     createPostRequest(
       title,
       description,
       url,
       file_id,
       sub_category_id,
-      type_post
+      type_post,
+      featured
     );
+
     this.setState({
       postTitle: "",
       postDescription: "",
@@ -311,12 +316,8 @@ class Posts extends Component {
       modalId,
       modalDescription,
       modalUrl,
-      modalFile,
-      modalSubcategories,
-      modalType,
       modalDelete,
-      modalName,
-      featured
+      modalName
     } = this.state;
 
     return (

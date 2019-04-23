@@ -57,6 +57,7 @@ class Posts extends Component {
     selectedSubCategory: "",
     selectedType: "",
     uploadedFiles: [],
+    uploadedThumbnail: [],
     modalUpdate: false,
     modalTitle: "",
     modalDescription: "",
@@ -109,9 +110,7 @@ class Posts extends Component {
     const file_id = uploadedFilesId.id;
     const type_post = selectedType.name;
     const featured = false;
-    console.log(
-      `title:${title},description:${description},url:${url}, sub_category_id: ${sub_category_id},file_id: ${file_id},type_post:${type_post} `
-    );
+
     createPostRequest(
       title,
       description,
@@ -151,6 +150,8 @@ class Posts extends Component {
       selectedType
     });
   };
+
+  // Upload File to drobBox
   handleUpload = files => {
     const uploadedFiles = files.map(file => ({
       file,
@@ -169,6 +170,7 @@ class Posts extends Component {
     });
     uploadedFiles.forEach(this.processUpload);
   };
+
   updateFile = (id, data) => {
     this.setState({
       uploadedFiles: this.state.uploadedFiles.map(uploadedFile => {
@@ -185,7 +187,7 @@ class Posts extends Component {
     data.append("file", uploadedFiles.file, uploadedFiles.name);
 
     api
-      .post("files", data, {
+      .post("uploadfile", data, {
         onUploadProgress: e => {
           const progress = parseInt(Math.round((e.loaded * 100) / e.total));
 
@@ -203,6 +205,64 @@ class Posts extends Component {
       })
       .catch(response => {
         this.updateFile(uploadedFiles.id, {
+          error: true
+        });
+      });
+  };
+  // Upload thumbnail to drobBox
+  handleUploadThumbnail = files => {
+    const uploadedThumbnail = files.map(file => ({
+      file,
+      id: uniqueId(),
+      name: file.name,
+      readableSize: filesize(file.size),
+      preview: URL.createObjectURL(file),
+      progress: 0,
+      uploaded: false,
+      error: false,
+      url: null
+    }));
+
+    this.setState({
+      uploadedThumbnail: this.state.uploadedThumbnail.concat(uploadedThumbnail)
+    });
+    uploadedThumbnail.forEach(this.processUploadThumbnail);
+  };
+
+  updateFileThumbnail = (id, data) => {
+    this.setState({
+      uploadedThumbnail: this.state.uploadedThumbnail.map(uploadedThumbnail => {
+        return id === uploadedThumbnail.id
+          ? { ...uploadedThumbnail, ...data }
+          : uploadedThumbnail;
+      })
+    });
+  };
+
+  processUploadThumbnail = uploadedThumbnail => {
+    const data = new FormData();
+
+    data.append("file", uploadedThumbnail.file, uploadedThumbnail.name);
+
+    api
+      .post("uploadthumbnail", data, {
+        onUploadProgress: e => {
+          const progress = parseInt(Math.round((e.loaded * 100) / e.total));
+
+          this.updateFileThumbnail(uploadedThumbnail.id, {
+            progress
+          });
+        }
+      })
+      .then(response => {
+        this.updateFileThumbnail(uploadedThumbnail.id, {
+          uploaded: true,
+          id: response.data.id,
+          url: response.data.url
+        });
+      })
+      .catch(response => {
+        this.updateFileThumbnail(uploadedThumbnail.id, {
           error: true
         });
       });
@@ -298,6 +358,12 @@ class Posts extends Component {
     getPostRequest(page);
   };
 
+  correctUrl = url => {
+    let urldrop = url.substring(0, url.indexOf("?dl=0")).concat("?dl=1");
+
+    return urldrop;
+  };
+
   render() {
     const { post, openPostModal, closePostModal } = this.props;
     const {
@@ -311,6 +377,7 @@ class Posts extends Component {
       selectedType,
       selectedSubCategory,
       uploadedFiles,
+      uploadedThumbnail,
       modalUpdate,
       modalTitle,
       modalId,
@@ -326,7 +393,6 @@ class Posts extends Component {
           <MDBBtn color="primary" onClick={openPostModal}>
             Cadastrar Nova Publicação
           </MDBBtn>
-
           <MDBModal isOpen={post.PostModalOpen} toggle={closePostModal}>
             <MDBModalHeader toggle={closePostModal}>
               Cadastrar Nova Publicação
@@ -347,7 +413,7 @@ class Posts extends Component {
                 <div className="invalid-feedback">
                   Você precisa informar um Username Válido!
                 </div>
-                <div className="valid-feedback">Looks good!</div>
+                <div className="valid-feedback">Muito Bem!</div>
                 <MDBInput
                   label="Digite a descrição da postagem"
                   name="postDescription"
@@ -362,7 +428,7 @@ class Posts extends Component {
                 <div className="invalid-feedback">
                   Você precisa informar um Username Válido!
                 </div>
-                <div className="valid-feedback">Looks good!</div>
+                <div className="valid-feedback">Muito Bem!</div>
                 <Select
                   options={PostType}
                   getOptionLabel={PostType => PostType.name}
@@ -400,7 +466,7 @@ class Posts extends Component {
                   </div>
                 )}
 
-                <MDBInput
+                {/* <MDBInput
                   label="Digite o link para o download"
                   type="text"
                   name="postUrl"
@@ -411,10 +477,13 @@ class Posts extends Component {
                   className="form-control"
                   outline
                   required
-                />
+                /> */}
                 <MDBCol>
                   {!!uploadedFiles.length < 1 && (
-                    <ImgDropAndCrop onUpload={this.handleUpload} />
+                    <ImgDropAndCrop
+                      onUpload={this.handleUpload}
+                      message={"Arraste aqui o arquivo para download"}
+                    />
                   )}
 
                   {!!uploadedFiles.length && (
@@ -424,6 +493,21 @@ class Posts extends Component {
                     />
                   )}
                 </MDBCol>
+                {/* <MDBCol>
+                  {!!uploadedThumbnail.length < 1 && (
+                    <ImgDropAndCrop
+                      onUpload={this.handleUploadThumbnail}
+                      message={"Arraste aqui a Thumbnail"}
+                    />
+                  )}
+
+                  {!!uploadedThumbnail.length && (
+                    <FileList
+                      files={uploadedThumbnail}
+                      onDelete={this.handleDeleteFile}
+                    />
+                  )}
+                </MDBCol> */}
               </MDBModalBody>
               <MDBModalFooter>
                 <MDBBtn color="secondary" onClick={closePostModal}>
@@ -434,9 +518,8 @@ class Posts extends Component {
                   type="submit"
                   disabled={
                     selectedSubCategory &&
-                    !!uploadedFiles.length &&
+                    // !!uploadedFiles.length &&
                     postTitle &&
-                    postUrl &&
                     postDescription
                       ? false
                       : true
@@ -496,19 +579,41 @@ class Posts extends Component {
                                   />
                                 ) : (
                                   <img
-                                    src={post.file.url}
+                                    src={
+                                      post.linkthumbdbx.url === null
+                                        ? post.file.url
+                                        : this.correctUrl(post.linkthumbdbx.url)
+                                    }
                                     alt="thumbnail"
                                     className="img-thumbnail mx-auto d-block"
                                   />
                                 )}
                               </td>
                               <td>
-                                <a href={post.url} alt={post.title}>
-                                  <MDBIcon
-                                    icon="link"
-                                    className="mr-1 outline"
-                                  />
-                                </a>
+                                {post.linkdownloaddbx ? (
+                                  <a
+                                    href={
+                                      post.linkdownloaddbx.url === null
+                                        ? post.url
+                                        : this.correctUrl(
+                                            post.linkdownloaddbx.url
+                                          )
+                                    }
+                                    alt={post.title}
+                                  >
+                                    <MDBIcon
+                                      icon="link"
+                                      className="mr-1 outline"
+                                    />
+                                  </a>
+                                ) : (
+                                  <a href={post.url} alt={post.title}>
+                                    <MDBIcon
+                                      icon="link"
+                                      className="mr-1 outline"
+                                    />
+                                  </a>
+                                )}
                               </td>
                               <td>
                                 <MDBTooltip

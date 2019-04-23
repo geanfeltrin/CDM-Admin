@@ -41,7 +41,7 @@ export const openModal = state => state.merge({ PostModalOpen: true });
 export const closeModal = state => state.merge({ PostModalOpen: false });
 
 export const createSuccess = (state, { post }) =>
-  state.merge({ data: [...state.data, post] });
+  state.merge({ data: { ...state.data, data: [post, ...state.data.data] } });
 
 export const featuredSuccess = (state, { update }) =>
   state.merge({ data: [...state.data, update] });

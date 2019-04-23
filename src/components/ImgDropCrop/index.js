@@ -6,7 +6,7 @@ import { DropContainer, UploadMessage } from "./styles";
 export default class ImgDropAndCrop extends Component {
   renderDragMessage = (isDragActive, isDragReject) => {
     if (!isDragActive) {
-      return <UploadMessage>Arraste arquivos aqui ...</UploadMessage>;
+      return <UploadMessage>{this.props.message}</UploadMessage>;
     }
     if (isDragReject) {
       return <UploadMessage type="error">Arquivo não suportado</UploadMessage>;

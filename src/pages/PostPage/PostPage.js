@@ -95,7 +95,8 @@ class Posts extends Component {
       postUrl,
       selectedSubCategory,
       uploadedFiles,
-      selectedType
+      selectedType,
+      uploadedThumbnail
     } = this.state;
 
     const [uploadedFilesId] = uploadedFiles;
@@ -103,22 +104,35 @@ class Posts extends Component {
       uploadedFilesId.id = "";
     }
 
+    const [uploadedThumbnailId] = uploadedThumbnail;
+    if (uploadedThumbnailId === null) {
+      uploadedThumbnailId.id = "";
+    }
+
     const title = postTitle;
     const description = postDescription;
     const url = postUrl;
     const sub_category_id = selectedSubCategory.id;
-    const file_id = uploadedFilesId.id;
+    const linkdbxdownload_id = uploadedFilesId.id;
+    const linkdbxthumb_id = uploadedThumbnail.id;
     const type_post = selectedType.name;
     const featured = false;
+    console.log(
+      "linkdbxdownload_id",
+      linkdbxdownload_id,
+      "linkdbxthumb_id",
+      linkdbxthumb_id
+    );
 
     createPostRequest(
       title,
       description,
       url,
-      file_id,
       sub_category_id,
       type_post,
-      featured
+      featured,
+      linkdbxdownload_id,
+      linkdbxthumb_id
     );
 
     this.setState({
@@ -493,7 +507,7 @@ class Posts extends Component {
                     />
                   )}
                 </MDBCol>
-                {/* <MDBCol>
+                <MDBCol>
                   {!!uploadedThumbnail.length < 1 && (
                     <ImgDropAndCrop
                       onUpload={this.handleUploadThumbnail}
@@ -507,7 +521,7 @@ class Posts extends Component {
                       onDelete={this.handleDeleteFile}
                     />
                   )}
-                </MDBCol> */}
+                </MDBCol>
               </MDBModalBody>
               <MDBModalFooter>
                 <MDBBtn color="secondary" onClick={closePostModal}>

@@ -12,10 +12,11 @@ const { Types, Creators } = createActions({
     "title",
     "description",
     "url",
-    "file_id",
     "sub_category_id",
     "type_post",
-    "featured"
+    "featured",
+    "linkdbxdownload_id",
+    "linkdbxthumb_id"
   ],
   createPostSuccess: ["post"],
   updateFeaturedRequest: ["id", "featured"],

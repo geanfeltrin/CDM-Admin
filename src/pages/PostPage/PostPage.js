@@ -602,17 +602,15 @@ class Posts extends Component {
                               <td>
                                 {post.thumbnail_id === null ? (
                                   <img
-                                    src={imgDefault}
+                                    src={
+                                      post.file_id ? post.file.url : imgDefault
+                                    }
                                     alt="thumbnail"
                                     className="img-thumbnail mx-auto d-block"
                                   />
                                 ) : (
                                   <img
-                                    src={
-                                      post.DropboxThumbnail.url === null
-                                        ? post.file.url
-                                        : post.DropboxThumbnail.url
-                                    }
+                                    src={post.DropboxThumbnail.url}
                                     alt="thumbnail"
                                     className="img-thumbnail mx-auto d-block"
                                   />

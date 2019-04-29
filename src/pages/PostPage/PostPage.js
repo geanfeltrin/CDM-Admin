@@ -386,12 +386,6 @@ class Posts extends Component {
     getPostRequest(page);
   };
 
-  correctUrl = url => {
-    let urldrop = url.substring(0, url.indexOf("?dl=0")).concat("?dl=1");
-
-    return urldrop;
-  };
-
   render() {
     const { post, openPostModal, closePostModal } = this.props;
     const {
@@ -617,9 +611,7 @@ class Posts extends Component {
                                     src={
                                       post.DropboxThumbnail.url === null
                                         ? post.file.url
-                                        : this.correctUrl(
-                                            post.DropboxThumbnail.url
-                                          )
+                                        : post.DropboxThumbnail.url
                                     }
                                     alt="thumbnail"
                                     className="img-thumbnail mx-auto d-block"
@@ -632,9 +624,7 @@ class Posts extends Component {
                                     href={
                                       post.DropboxDownload.url === null
                                         ? post.url
-                                        : this.correctUrl(
-                                            post.DropboxDownload.url
-                                          )
+                                        : post.DropboxDownload.url
                                     }
                                     alt={post.title}
                                   >

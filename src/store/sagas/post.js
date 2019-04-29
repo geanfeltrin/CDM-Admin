@@ -18,8 +18,8 @@ export function* createPost({
   sub_category_id,
   type_post,
   featured,
-  linkdbxdownload_id,
-  linkdbxthumb_id
+  download_id,
+  thumbnail_id
 }) {
   try {
     const response = yield call(api.post, "post", {
@@ -29,8 +29,8 @@ export function* createPost({
       sub_category_id,
       type: type_post,
       featured,
-      linkdbxdownload_id,
-      linkdbxthumb_id
+      download_id,
+      thumbnail_id
     });
     console.log(response);
     console.log("s", response.data);

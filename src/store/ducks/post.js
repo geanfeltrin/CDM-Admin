@@ -15,8 +15,8 @@ const { Types, Creators } = createActions({
     "sub_category_id",
     "type_post",
     "featured",
-    "linkdbxdownload_id",
-    "linkdbxthumb_id"
+    "download_id",
+    "thumbnail_id"
   ],
   createPostSuccess: ["post"],
   updateFeaturedRequest: ["id", "featured"],

@@ -18,7 +18,7 @@ import imgDefault from "../../assets/default.jpeg";
 import Paginate from "../../components/Paginate";
 // fim components
 
-import { Container } from "./styles";
+import { Container, MessageAlert } from "./styles";
 import {
   MDBBtn,
   MDBModal,
@@ -86,7 +86,7 @@ class Posts extends Component {
 
   handleCreatePost = e => {
     e.preventDefault();
-    // e.target.className += " was-validated";
+    e.target.className += " was-validated";
 
     const { createPostRequest } = this.props;
     const {
@@ -109,20 +109,14 @@ class Posts extends Component {
       uploadedThumbnailId.id = "";
     }
 
-    const title = postTitle;
-    const description = postDescription;
-    const url = postUrl;
-    const sub_category_id = selectedSubCategory.id;
-    const linkdbxdownload_id = uploadedFilesId.id;
-    const linkdbxthumb_id = uploadedThumbnail.id;
-    const type_post = selectedType.name;
-    const featured = false;
-    console.log(
-      "linkdbxdownload_id",
-      linkdbxdownload_id,
-      "linkdbxthumb_id",
-      linkdbxthumb_id
-    );
+    let title = postTitle;
+    let description = postDescription;
+    let url = postUrl;
+    let sub_category_id = selectedSubCategory.id;
+    let download_id = uploadedFilesId.id;
+    let thumbnail_id = uploadedThumbnailId.id;
+    let type_post = selectedType.name;
+    let featured = false;
 
     createPostRequest(
       title,
@@ -131,8 +125,8 @@ class Posts extends Component {
       sub_category_id,
       type_post,
       featured,
-      linkdbxdownload_id,
-      linkdbxthumb_id
+      download_id,
+      thumbnail_id
     );
 
     this.setState({
@@ -142,6 +136,7 @@ class Posts extends Component {
       selectedCategory: null,
       selectedSubCategory: null,
       uploadedFiles: [],
+      uploadedThumbnail: [],
       selectedType: null
     });
   };
@@ -282,10 +277,19 @@ class Posts extends Component {
       });
   };
 
-  handleDeleteFile = async id => {
-    await api.delete(`files/${id}`);
+  handleDeleteFileDownload = async id => {
+    await api.delete(`uploadfile/${id}`);
     this.setState({
       uploadedFiles: this.state.uploadedFiles.filter(file => file.id !== id)
+    });
+  };
+
+  handleDeleteFileThumbnail = async id => {
+    await api.delete(`uploadthumbnail/${id}`);
+    this.setState({
+      uploadedThumbnail: this.state.uploadedThumbnail.filter(
+        file => file.id !== id
+      )
     });
   };
 
@@ -300,11 +304,20 @@ class Posts extends Component {
 
   handleClear = () => {
     const [uploadedFilesId] = this.state.uploadedFiles;
+    const [uploadedThumbnailId] = this.state.uploadedThumbnail;
+
     if (this.state.uploadedFiles.length > 0) {
       const Files = uploadedFilesId.id;
       console.log(Files);
-      this.handleDeleteFile(Files);
+      this.handleDeleteFileDownload(Files);
     }
+
+    if (this.state.uploadedThumbnail.length > 0) {
+      const Files = uploadedThumbnailId.id;
+      console.log(Files);
+      this.handleDeleteFileThumbnail(Files);
+    }
+
     this.setState({
       postTitle: "",
       postDescription: "",
@@ -312,6 +325,7 @@ class Posts extends Component {
       selectedCategory: null,
       selectedSubCategory: null,
       uploadedFiles: [],
+      uploadedThumbnail: [],
       selectedType: null
     });
   };
@@ -492,36 +506,42 @@ class Posts extends Component {
                   outline
                   required
                 /> */}
-                <MDBCol>
-                  {!!uploadedFiles.length < 1 && (
-                    <ImgDropAndCrop
-                      onUpload={this.handleUpload}
-                      message={"Arraste aqui o arquivo para download"}
-                    />
-                  )}
+                <MDBRow className="mt-2">
+                  <MDBCol>
+                    {!!uploadedFiles.length < 1 && (
+                      <ImgDropAndCrop
+                        onUpload={this.handleUpload}
+                        message={"Arraste aqui o arquivo para Download"}
+                        backgroundColor={"download"}
+                        accept={"application/*, image/*"}
+                      />
+                    )}
 
-                  {!!uploadedFiles.length && (
-                    <FileList
-                      files={uploadedFiles}
-                      onDelete={this.handleDeleteFile}
-                    />
-                  )}
-                </MDBCol>
-                <MDBCol>
-                  {!!uploadedThumbnail.length < 1 && (
-                    <ImgDropAndCrop
-                      onUpload={this.handleUploadThumbnail}
-                      message={"Arraste aqui a Thumbnail"}
-                    />
-                  )}
+                    {!!uploadedFiles.length && (
+                      <FileList
+                        files={uploadedFiles}
+                        onDelete={this.handleDeleteFileDownload}
+                      />
+                    )}
+                  </MDBCol>
+                  <MDBCol>
+                    {!!uploadedThumbnail.length < 1 && (
+                      <ImgDropAndCrop
+                        onUpload={this.handleUploadThumbnail}
+                        message={"Arraste aqui a Thumbnail"}
+                        backgroundColor={"thumbnail"}
+                      />
+                    )}
 
-                  {!!uploadedThumbnail.length && (
-                    <FileList
-                      files={uploadedThumbnail}
-                      onDelete={this.handleDeleteFile}
-                    />
-                  )}
-                </MDBCol>
+                    {!!uploadedThumbnail.length && (
+                      <FileList
+                        files={uploadedThumbnail}
+                        onDelete={this.handleDeleteFileThumbnail}
+                      />
+                    )}
+                  </MDBCol>
+                </MDBRow>
+                <MessageAlert>* adicionar arquivo do tipo ZIP</MessageAlert>
               </MDBModalBody>
               <MDBModalFooter>
                 <MDBBtn color="secondary" onClick={closePostModal}>
@@ -532,7 +552,8 @@ class Posts extends Component {
                   type="submit"
                   disabled={
                     selectedSubCategory &&
-                    // !!uploadedFiles.length &&
+                    !!uploadedFiles.length &&
+                    !!uploadedThumbnail.length &&
                     postTitle &&
                     postDescription
                       ? false
@@ -585,7 +606,7 @@ class Posts extends Component {
                                 </MDBBadge>
                               </td>
                               <td>
-                                {post.file_id === null ? (
+                                {post.thumbnail_id === null ? (
                                   <img
                                     src={imgDefault}
                                     alt="thumbnail"
@@ -594,9 +615,11 @@ class Posts extends Component {
                                 ) : (
                                   <img
                                     src={
-                                      post.linkthumbdbx.url === null
+                                      post.DropboxThumbnail.url === null
                                         ? post.file.url
-                                        : this.correctUrl(post.linkthumbdbx.url)
+                                        : this.correctUrl(
+                                            post.DropboxThumbnail.url
+                                          )
                                     }
                                     alt="thumbnail"
                                     className="img-thumbnail mx-auto d-block"
@@ -604,13 +627,13 @@ class Posts extends Component {
                                 )}
                               </td>
                               <td>
-                                {post.linkdownloaddbx ? (
+                                {post.download_id ? (
                                   <a
                                     href={
-                                      post.linkdownloaddbx.url === null
+                                      post.DropboxDownload.url === null
                                         ? post.url
                                         : this.correctUrl(
-                                            post.linkdownloaddbx.url
+                                            post.DropboxDownload.url
                                           )
                                     }
                                     alt={post.title}

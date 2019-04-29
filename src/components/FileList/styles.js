@@ -2,6 +2,9 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   margin-top: 20px;
+  li {
+    list-style-type: none;
+  }
 `;
 
 export const FileInfo = styled.div`

@@ -17,3 +17,8 @@ export const Container = styled.div`
     }
   }
 `;
+
+export const MessageAlert = styled.span`
+  color: firebrick;
+  font-size: small;
+`;

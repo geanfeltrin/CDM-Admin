@@ -433,7 +433,7 @@ class Posts extends Component {
                   required
                 />
                 <div className="invalid-feedback">
-                  Você precisa informar um Username Válido!
+                  Você precisa informar um titulo Válido!
                 </div>
                 <div className="valid-feedback">Muito Bem!</div>
                 <MDBInput
@@ -448,7 +448,7 @@ class Posts extends Component {
                   required
                 />
                 <div className="invalid-feedback">
-                  Você precisa informar um Username Válido!
+                  Você precisa informar uma descrição Válido!
                 </div>
                 <div className="valid-feedback">Muito Bem!</div>
                 <Select

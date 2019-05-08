@@ -117,7 +117,9 @@ class Posts extends Component {
     let thumbnail_id = uploadedThumbnailId.id;
     let type_post = selectedType.name;
     let featured = false;
-
+    console.log(`dropbox download = ${uploadedFiles} 
+uploadedThumbnail= ${uploadedThumbnail}
+`);
     createPostRequest(
       title,
       description,
@@ -610,7 +612,7 @@ class Posts extends Component {
                                   />
                                 ) : (
                                   <img
-                                    src={post.DropboxThumbnail.url}
+                                    src={post.dropboxThumbnail.url}
                                     alt="thumbnail"
                                     className="img-thumbnail mx-auto d-block"
                                   />
@@ -620,9 +622,9 @@ class Posts extends Component {
                                 {post.download_id ? (
                                   <a
                                     href={
-                                      post.DropboxDownload.url === null
+                                      post.dropboxDownload.url === null
                                         ? post.url
-                                        : post.DropboxDownload.url
+                                        : post.dropboxDownload.url
                                     }
                                     alt={post.title}
                                   >

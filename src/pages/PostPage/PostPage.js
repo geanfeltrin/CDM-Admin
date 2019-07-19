@@ -1,24 +1,24 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
-import PostActions from '../../store/ducks/post';
+import PostActions from "../../store/ducks/post";
 
-import api from '../../services/api';
-import Select from 'react-select';
-import { uniqueId } from 'lodash';
-import filesize from 'filesize';
+import api from "../../services/api";
+import Select from "react-select";
+import { uniqueId } from "lodash";
+import filesize from "filesize";
 
 // components
-import ImgDropAndCrop from '../../components/ImgDropCrop';
-import FileList from '../../components/FileList';
-import imgDefault from '../../assets/default.jpeg';
-import Paginate from '../../components/Paginate';
+import ImgDropAndCrop from "../../components/ImgDropCrop";
+import FileList from "../../components/FileList";
+import imgDefault from "../../assets/default.jpeg";
+import Paginate from "../../components/Paginate";
 // fim components
 
-import { Container, MessageAlert } from './styles';
+import { Container, MessageAlert } from "./styles";
 import {
   MDBBtn,
   MDBModal,
@@ -35,10 +35,11 @@ import {
   MDBTableBody,
   MDBBadge,
   MDBIcon,
-  MDBTooltip
-} from 'mdbreact';
+  MDBTooltip,
+  MDBAlert
+} from "mdbreact";
 
-import Modal from '../../components/Modal';
+import Modal from "../../components/Modal";
 
 class Posts extends Component {
   static propTypes = {
@@ -47,31 +48,31 @@ class Posts extends Component {
     createPostRequest: PropTypes.func.isRequired
   };
   state = {
-    postTitle: '',
-    postDescription: '',
-    postUrl: '',
+    postTitle: "",
+    postDescription: "",
+    postUrl: "",
     PostType: [
-      { id: 0, name: 'public' },
-      { id: 1, name: 'privado' },
-      { id: 2, name: 'exclusiveB' },
-      { id: 3, name: 'exclusiveA' }
+      { id: 0, name: "public" },
+      { id: 1, name: "privado" },
+      { id: 2, name: "exclusiveB" },
+      { id: 3, name: "exclusiveA" }
     ],
-    category: '',
+    category: "",
     subCategory: null,
     selectedCategory: null,
-    selectedSubCategory: '',
-    selectedType: '',
+    selectedSubCategory: "",
+    selectedType: "",
     uploadedFiles: [],
     uploadedThumbnail: [],
     modalUpdate: false,
-    modalTitle: '',
-    modalDescription: '',
-    modalUrl: '',
-    modalType: '',
+    modalTitle: "",
+    modalDescription: "",
+    modalUrl: "",
+    modalType: "",
     modalFile: [],
     modalSubcategories: [],
     modalDelete: false,
-    modalName: '',
+    modalName: "",
     featured: false
   };
 
@@ -81,7 +82,7 @@ class Posts extends Component {
 
     getPostRequest(page);
 
-    const response = await api.get('category');
+    const response = await api.get("category");
     this.setState({ category: response.data });
   }
 
@@ -91,7 +92,7 @@ class Posts extends Component {
 
   handleCreatePost = e => {
     e.preventDefault();
-    e.target.className += ' was-validated';
+    e.target.className += " was-validated";
 
     const { createPostRequest } = this.props;
     const {
@@ -106,12 +107,12 @@ class Posts extends Component {
 
     const [uploadedFilesId] = uploadedFiles;
     if (uploadedFilesId === null) {
-      uploadedFilesId.id = '';
+      uploadedFilesId.id = "";
     }
 
     const [uploadedThumbnailId] = uploadedThumbnail;
     if (uploadedThumbnailId === null) {
-      uploadedThumbnailId.id = '';
+      uploadedThumbnailId.id = "";
     }
 
     let title = postTitle;
@@ -135,9 +136,9 @@ class Posts extends Component {
     );
 
     this.setState({
-      postTitle: '',
-      postDescription: '',
-      postUrl: '',
+      postTitle: "",
+      postDescription: "",
+      postUrl: "",
       selectedCategory: null,
       selectedSubCategory: null,
       uploadedFiles: [],
@@ -198,10 +199,10 @@ class Posts extends Component {
   processUpload = uploadedFiles => {
     const data = new FormData();
 
-    data.append('file', uploadedFiles.file, uploadedFiles.name);
+    data.append("file", uploadedFiles.file, uploadedFiles.name);
 
     api
-      .post('uploadfile', data, {
+      .post("uploadfile", data, {
         onUploadProgress: e => {
           const progress = parseInt(Math.round((e.loaded * 100) / e.total));
 
@@ -256,10 +257,10 @@ class Posts extends Component {
   processUploadThumbnail = uploadedThumbnail => {
     const data = new FormData();
 
-    data.append('file', uploadedThumbnail.file, uploadedThumbnail.name);
+    data.append("file", uploadedThumbnail.file, uploadedThumbnail.name);
 
     api
-      .post('uploadthumbnail', data, {
+      .post("uploadthumbnail", data, {
         onUploadProgress: e => {
           const progress = parseInt(Math.round((e.loaded * 100) / e.total));
 
@@ -324,9 +325,9 @@ class Posts extends Component {
     }
 
     this.setState({
-      postTitle: '',
-      postDescription: '',
-      postUrl: '',
+      postTitle: "",
+      postDescription: "",
+      postUrl: "",
       selectedCategory: null,
       selectedSubCategory: null,
       uploadedFiles: [],
@@ -462,33 +463,33 @@ class Posts extends Component {
                   getOptionValue={PostType => PostType.id}
                   value={selectedType}
                   onChange={this.handleChangeType}
-                  placeholder={'Status da publicação'}
-                  className={'mb-3'}
+                  placeholder={"Status da publicação"}
+                  className={"mb-3"}
                   isRequired
                   required
                 />
-                {/* <div>
-                  {selectedType.name === 'exclusiveA' && (
-                    <MessageAlert>
-                      {selectedType.name} a opção escolhida NÂO permite que
-                      Usuários com permissão "PoloB" visualize essa publicação
-                    </MessageAlert>
-                  )} */}
-                {/* {selectedType.name === 'exclusiveB' && (
-                    <MessageAlert>
-                      {selectedType.name} a opção escolhida NÂO permite que
-                      Usuários com permissão "Polo" visualize essa publicação
-                    </MessageAlert>
-                  )} */}
-                {/* </div> */}
+
+                {selectedType && selectedType.name === "exclusiveB" && (
+                  <MDBAlert color="warning">
+                    A opção "exclusiveB" NÃO que permissão "Polo" visualize a
+                    publicação.
+                  </MDBAlert>
+                )}
+                {selectedType && selectedType.name === "exclusiveA" && (
+                  <MDBAlert color="warning">
+                    A opção "exclusiveA" NÂO permite que Usuários com permissão
+                    "PoloB" visualize a publicação.
+                  </MDBAlert>
+                )}
+
                 <Select
                   options={category}
                   getOptionLabel={category => category.name}
                   getOptionValue={category => category.id}
                   value={selectedCategory}
                   onChange={this.handleChangeCategory}
-                  placeholder={'Selecione a Categoria'}
-                  className={'mb-3'}
+                  placeholder={"Selecione a Categoria"}
+                  className={"mb-3"}
                   isRequired
                   required
                 />
@@ -500,7 +501,7 @@ class Posts extends Component {
                       getOptionValue={subCategory => subCategory.id}
                       value={selectedSubCategory}
                       onChange={this.handleChangeSubCategory}
-                      placeholder={'Selecione a Sub-Categoria'}
+                      placeholder={"Selecione a Sub-Categoria"}
                       isRequired
                       required
                     />
@@ -524,9 +525,9 @@ class Posts extends Component {
                     {!!uploadedFiles.length < 1 && (
                       <ImgDropAndCrop
                         onUpload={this.handleUpload}
-                        message={'Arraste aqui o arquivo para Download'}
-                        backgroundColor={'download'}
-                        accept={'application/*, image/*'}
+                        message={"Arraste aqui o arquivo para Download"}
+                        backgroundColor={"download"}
+                        accept={"application/*, image/*"}
                       />
                     )}
 
@@ -541,8 +542,8 @@ class Posts extends Component {
                     {!!uploadedThumbnail.length < 1 && (
                       <ImgDropAndCrop
                         onUpload={this.handleUploadThumbnail}
-                        message={'Arraste aqui a Thumbnail'}
-                        backgroundColor={'thumbnail'}
+                        message={"Arraste aqui a Thumbnail"}
+                        backgroundColor={"thumbnail"}
                       />
                     )}
 
@@ -610,9 +611,9 @@ class Posts extends Component {
                               <td>
                                 <MDBBadge
                                   color={
-                                    post.type === 'public'
-                                      ? 'success'
-                                      : 'danger'
+                                    post.type === "public"
+                                      ? "success"
+                                      : "danger"
                                   }
                                 >
                                   {post.type}
@@ -685,8 +686,8 @@ class Posts extends Component {
                                       icon="star"
                                       className={
                                         post.featured
-                                          ? 'amber-text'
-                                          : 'indigo-text'
+                                          ? "amber-text"
+                                          : "indigo-text"
                                       }
                                       size="lg"
                                     />
@@ -851,7 +852,7 @@ class Posts extends Component {
               </MDBModalHeader>
               <MDBModalBody>
                 <span>
-                  Você deseja deletar a publicação{' '}
+                  Você deseja deletar a publicação{" "}
                   <strong>"{modalName}"</strong>?
                 </span>
               </MDBModalBody>

@@ -32,9 +32,7 @@ export function* createPost({
       download_id,
       thumbnail_id
     });
-    console.log(response);
-    console.log("s", response.data);
-    console.log(PostAction.createPostSuccess(response.data));
+    
     yield put(PostAction.createPostSuccess(response.data));
 
     yield put(PostAction.closePostModal());

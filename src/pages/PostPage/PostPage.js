@@ -1,24 +1,24 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-import PostActions from "../../store/ducks/post";
+import PostActions from '../../store/ducks/post';
 
-import api from "../../services/api";
-import Select from "react-select";
-import { uniqueId } from "lodash";
-import filesize from "filesize";
+import api from '../../services/api';
+import Select from 'react-select';
+import { uniqueId } from 'lodash';
+import filesize from 'filesize';
 
 // components
-import ImgDropAndCrop from "../../components/ImgDropCrop";
-import FileList from "../../components/FileList";
-import imgDefault from "../../assets/default.jpeg";
-import Paginate from "../../components/Paginate";
+import ImgDropAndCrop from '../../components/ImgDropCrop';
+import FileList from '../../components/FileList';
+import imgDefault from '../../assets/default.jpeg';
+import Paginate from '../../components/Paginate';
 // fim components
 
-import { Container, MessageAlert } from "./styles";
+import { Container, MessageAlert } from './styles';
 import {
   MDBBtn,
   MDBModal,
@@ -36,9 +36,9 @@ import {
   MDBBadge,
   MDBIcon,
   MDBTooltip
-} from "mdbreact";
+} from 'mdbreact';
 
-import Modal from "../../components/Modal";
+import Modal from '../../components/Modal';
 
 class Posts extends Component {
   static propTypes = {
@@ -47,26 +47,31 @@ class Posts extends Component {
     createPostRequest: PropTypes.func.isRequired
   };
   state = {
-    postTitle: "",
-    postDescription: "",
-    postUrl: "",
-    PostType: [{ id: 0, name: "public" }, { id: 1, name: "privado" }],
-    category: "",
+    postTitle: '',
+    postDescription: '',
+    postUrl: '',
+    PostType: [
+      { id: 0, name: 'public' },
+      { id: 1, name: 'privado' },
+      { id: 2, name: 'exclusiveB' },
+      { id: 3, name: 'exclusiveA' }
+    ],
+    category: '',
     subCategory: null,
     selectedCategory: null,
-    selectedSubCategory: "",
-    selectedType: "",
+    selectedSubCategory: '',
+    selectedType: '',
     uploadedFiles: [],
     uploadedThumbnail: [],
     modalUpdate: false,
-    modalTitle: "",
-    modalDescription: "",
-    modalUrl: "",
-    modalType: "",
+    modalTitle: '',
+    modalDescription: '',
+    modalUrl: '',
+    modalType: '',
     modalFile: [],
     modalSubcategories: [],
     modalDelete: false,
-    modalName: "",
+    modalName: '',
     featured: false
   };
 
@@ -76,7 +81,7 @@ class Posts extends Component {
 
     getPostRequest(page);
 
-    const response = await api.get("category");
+    const response = await api.get('category');
     this.setState({ category: response.data });
   }
 
@@ -86,7 +91,7 @@ class Posts extends Component {
 
   handleCreatePost = e => {
     e.preventDefault();
-    e.target.className += " was-validated";
+    e.target.className += ' was-validated';
 
     const { createPostRequest } = this.props;
     const {
@@ -101,12 +106,12 @@ class Posts extends Component {
 
     const [uploadedFilesId] = uploadedFiles;
     if (uploadedFilesId === null) {
-      uploadedFilesId.id = "";
+      uploadedFilesId.id = '';
     }
 
     const [uploadedThumbnailId] = uploadedThumbnail;
     if (uploadedThumbnailId === null) {
-      uploadedThumbnailId.id = "";
+      uploadedThumbnailId.id = '';
     }
 
     let title = postTitle;
@@ -117,9 +122,7 @@ class Posts extends Component {
     let thumbnail_id = uploadedThumbnailId.id;
     let type_post = selectedType.name;
     let featured = false;
-    console.log(`dropbox download = ${uploadedFiles} 
-uploadedThumbnail= ${uploadedThumbnail}
-`);
+
     createPostRequest(
       title,
       description,
@@ -132,9 +135,9 @@ uploadedThumbnail= ${uploadedThumbnail}
     );
 
     this.setState({
-      postTitle: "",
-      postDescription: "",
-      postUrl: "",
+      postTitle: '',
+      postDescription: '',
+      postUrl: '',
       selectedCategory: null,
       selectedSubCategory: null,
       uploadedFiles: [],
@@ -195,10 +198,10 @@ uploadedThumbnail= ${uploadedThumbnail}
   processUpload = uploadedFiles => {
     const data = new FormData();
 
-    data.append("file", uploadedFiles.file, uploadedFiles.name);
+    data.append('file', uploadedFiles.file, uploadedFiles.name);
 
     api
-      .post("uploadfile", data, {
+      .post('uploadfile', data, {
         onUploadProgress: e => {
           const progress = parseInt(Math.round((e.loaded * 100) / e.total));
 
@@ -253,10 +256,10 @@ uploadedThumbnail= ${uploadedThumbnail}
   processUploadThumbnail = uploadedThumbnail => {
     const data = new FormData();
 
-    data.append("file", uploadedThumbnail.file, uploadedThumbnail.name);
+    data.append('file', uploadedThumbnail.file, uploadedThumbnail.name);
 
     api
-      .post("uploadthumbnail", data, {
+      .post('uploadthumbnail', data, {
         onUploadProgress: e => {
           const progress = parseInt(Math.round((e.loaded * 100) / e.total));
 
@@ -321,9 +324,9 @@ uploadedThumbnail= ${uploadedThumbnail}
     }
 
     this.setState({
-      postTitle: "",
-      postDescription: "",
-      postUrl: "",
+      postTitle: '',
+      postDescription: '',
+      postUrl: '',
       selectedCategory: null,
       selectedSubCategory: null,
       uploadedFiles: [],
@@ -459,19 +462,33 @@ uploadedThumbnail= ${uploadedThumbnail}
                   getOptionValue={PostType => PostType.id}
                   value={selectedType}
                   onChange={this.handleChangeType}
-                  placeholder={"Status da publicação"}
-                  className={"mb-3"}
+                  placeholder={'Status da publicação'}
+                  className={'mb-3'}
                   isRequired
                   required
                 />
+                {/* <div>
+                  {selectedType.name === 'exclusiveA' && (
+                    <MessageAlert>
+                      {selectedType.name} a opção escolhida NÂO permite que
+                      Usuários com permissão "PoloB" visualize essa publicação
+                    </MessageAlert>
+                  )} */}
+                {/* {selectedType.name === 'exclusiveB' && (
+                    <MessageAlert>
+                      {selectedType.name} a opção escolhida NÂO permite que
+                      Usuários com permissão "Polo" visualize essa publicação
+                    </MessageAlert>
+                  )} */}
+                {/* </div> */}
                 <Select
                   options={category}
                   getOptionLabel={category => category.name}
                   getOptionValue={category => category.id}
                   value={selectedCategory}
                   onChange={this.handleChangeCategory}
-                  placeholder={"Selecione a Categoria"}
-                  className={"mb-3"}
+                  placeholder={'Selecione a Categoria'}
+                  className={'mb-3'}
                   isRequired
                   required
                 />
@@ -483,7 +500,7 @@ uploadedThumbnail= ${uploadedThumbnail}
                       getOptionValue={subCategory => subCategory.id}
                       value={selectedSubCategory}
                       onChange={this.handleChangeSubCategory}
-                      placeholder={"Selecione a Sub-Categoria"}
+                      placeholder={'Selecione a Sub-Categoria'}
                       isRequired
                       required
                     />
@@ -507,9 +524,9 @@ uploadedThumbnail= ${uploadedThumbnail}
                     {!!uploadedFiles.length < 1 && (
                       <ImgDropAndCrop
                         onUpload={this.handleUpload}
-                        message={"Arraste aqui o arquivo para Download"}
-                        backgroundColor={"download"}
-                        accept={"application/*, image/*"}
+                        message={'Arraste aqui o arquivo para Download'}
+                        backgroundColor={'download'}
+                        accept={'application/*, image/*'}
                       />
                     )}
 
@@ -524,8 +541,8 @@ uploadedThumbnail= ${uploadedThumbnail}
                     {!!uploadedThumbnail.length < 1 && (
                       <ImgDropAndCrop
                         onUpload={this.handleUploadThumbnail}
-                        message={"Arraste aqui a Thumbnail"}
-                        backgroundColor={"thumbnail"}
+                        message={'Arraste aqui a Thumbnail'}
+                        backgroundColor={'thumbnail'}
                       />
                     )}
 
@@ -593,9 +610,9 @@ uploadedThumbnail= ${uploadedThumbnail}
                               <td>
                                 <MDBBadge
                                   color={
-                                    post.type === "public"
-                                      ? "success"
-                                      : "danger"
+                                    post.type === 'public'
+                                      ? 'success'
+                                      : 'danger'
                                   }
                                 >
                                   {post.type}
@@ -612,7 +629,11 @@ uploadedThumbnail= ${uploadedThumbnail}
                                   />
                                 ) : (
                                   <img
-                                    src={post.dropboxThumbnail.url}
+                                    src={
+                                      post.dropboxThumbnail.url === null
+                                        ? imgDefault
+                                        : post.dropboxThumbnail.url
+                                    }
                                     alt="thumbnail"
                                     className="img-thumbnail mx-auto d-block"
                                   />
@@ -664,8 +685,8 @@ uploadedThumbnail= ${uploadedThumbnail}
                                       icon="star"
                                       className={
                                         post.featured
-                                          ? "amber-text"
-                                          : "indigo-text"
+                                          ? 'amber-text'
+                                          : 'indigo-text'
                                       }
                                       size="lg"
                                     />
@@ -830,7 +851,7 @@ uploadedThumbnail= ${uploadedThumbnail}
               </MDBModalHeader>
               <MDBModalBody>
                 <span>
-                  Você deseja deletar a publicação{" "}
+                  Você deseja deletar a publicação{' '}
                   <strong>"{modalName}"</strong>?
                 </span>
               </MDBModalBody>

@@ -70,7 +70,7 @@ class Posts extends Component {
     modalUrl: "",
     modalType: "",
     modalFile: [],
-    modalSubcategories: [],
+    modalSubcategories: null,
     modalDelete: false,
     modalName: "",
     featured: false
@@ -156,6 +156,7 @@ class Posts extends Component {
   };
 
   handleChangeSubCategory = selectedSubCategory => {
+    console.log(selectedSubCategory);
     this.setState({
       selectedSubCategory
     });
@@ -337,6 +338,14 @@ class Posts extends Component {
   };
 
   handleUpdatePost = async id => {
+    if (this.state.selectedSubCategory) {
+      await api.put(`post/${id}`, {
+        title: this.state.modalTitle,
+        description: this.state.modalDescription,
+        url: this.state.modalUrl,
+        sub_category_id: this.state.selectedSubCategory.id
+      });
+    }
     await api.put(`post/${id}`, {
       title: this.state.modalTitle,
       description: this.state.modalDescription,
@@ -357,7 +366,7 @@ class Posts extends Component {
       modalDescription: description,
       modalUrl: url,
       modalFile: file,
-      modalSubcategories: subCategories,
+      // modalSubcategories: subCategories,
       modalType: type
     });
   };
@@ -392,6 +401,14 @@ class Posts extends Component {
     getPostRequest(page);
   };
 
+  loadSubcategory = async id => {
+    const response = await api.get(`/category/${id}`);
+
+    const data = response.data.subCategories.map(d => d);
+
+    this.setState({ modalSubcategories: data });
+  };
+
   render() {
     const { post, openPostModal, closePostModal } = this.props;
     const {
@@ -412,7 +429,8 @@ class Posts extends Component {
       modalDescription,
       modalUrl,
       modalDelete,
-      modalName
+      modalName,
+      modalSubcategories
     } = this.state;
 
     return (
@@ -703,17 +721,20 @@ class Posts extends Component {
                                   <MDBBtn
                                     size="sm"
                                     color="info"
-                                    onClick={() =>
+                                    onClick={() => {
                                       this.toggleUpdate(
                                         post.title,
                                         post.id,
                                         post.description,
                                         post.url,
                                         post.file,
-                                        post.subCategories,
+                                        post.subcategories,
                                         post.type
-                                      )
-                                    }
+                                      );
+                                      this.loadSubcategory(
+                                        post.subcategories.category_id
+                                      );
+                                    }}
                                   >
                                     <MDBIcon icon="edit" className="mr-1" />
                                   </MDBBtn>
@@ -817,17 +838,23 @@ class Posts extends Component {
                   <div className="invalid-feedback">
                     Você precisa informar uma Descrição Válido!
                   </div>
-                  {/* <Select
-                  options={PostType}
-                  getOptionLabel={PostType => PostType.name}
-                  getOptionValue={PostType => PostType.id}
-                  value={selectedType}
-                  onChange={this.handleChangeType}
-                  placeholder={"Status da publicação"}
-                  className={"mb-3"}
-                  isRequired
-                  required
-                /> */}
+                  {this.state.modalSubcategories && (
+                    <Select
+                      options={modalSubcategories}
+                      getOptionLabel={modalSubcategories =>
+                        modalSubcategories.name
+                      }
+                      getOptionValue={modalSubcategories =>
+                        modalSubcategories.id
+                      }
+                      value={selectedSubCategory}
+                      onChange={this.handleChangeSubCategory}
+                      placeholder={"Selecione a Sub-Categoria"}
+                      isRequired
+                      required
+                    />
+                  )}
+                  <div />
                 </MDBModalBody>
 
                 <MDBModalFooter>

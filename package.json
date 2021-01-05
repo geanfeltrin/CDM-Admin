@@ -5,7 +5,7 @@
   "author": "CDM <gean.feltrin@residenciaeducacao.com.br>",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "connected-react-router": "^6.3.1",
     "express": "^4.16.4",
     "filesize": "^4.1.2",
